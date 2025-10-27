@@ -1,6 +1,10 @@
 import { type Booking, type InsertBooking } from "@shared/schema";
 import { randomUUID } from "crypto";
-import { appendBooking, getAllBookings, type BookingRow } from "./google-sheets";
+import {
+  appendBooking,
+  getAllBookings,
+  type BookingRow,
+} from "./google-sheets";
 
 export interface IStorage {
   createBooking(booking: InsertBooking): Promise<Booking>;
@@ -11,12 +15,13 @@ export class GoogleSheetsStorage implements IStorage {
   async createBooking(insertBooking: InsertBooking): Promise<Booking> {
     const id = randomUUID();
     const createdAt = new Date();
-    
+
     const booking: Booking = {
       ...insertBooking,
       id,
       status: "upcoming",
       createdAt,
+      specialRequests: insertBooking.specialRequests ?? null,
     };
 
     const bookingRow: BookingRow = {
@@ -29,19 +34,19 @@ export class GoogleSheetsStorage implements IStorage {
       serviceType: booking.serviceType,
       appointmentDate: booking.appointmentDate,
       appointmentTime: booking.appointmentTime,
-      specialRequests: booking.specialRequests || '',
+      specialRequests: booking.specialRequests ?? "",
       status: booking.status,
       createdAt: booking.createdAt.toISOString(),
     };
 
     await appendBooking(bookingRow);
-    
+
     return booking;
   }
 
   async getAllBookings(): Promise<Booking[]> {
     const rows = await getAllBookings();
-    
+
     return rows.map((row) => ({
       id: row.id,
       customerName: row.customerName,

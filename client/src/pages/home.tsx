@@ -49,7 +49,8 @@ export default function Home() {
               Premium Car Wash & Detailing
             </h1>
             <p className="text-xl text-white/90 mb-8">
-              Professional auto care services with convenient online booking. Choose your package and get your car looking brand new.
+              Professional auto care services with convenient online booking.
+              Choose your package and get your car looking brand new.
             </p>
             <Link href="/book" asChild>
               <Button
